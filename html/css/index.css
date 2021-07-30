@@ -1,0 +1,24 @@
+p {
+    background-color:yellow;
+}
+
+h1 {
+    text-align: center;
+    text-decoration: #1ABC9C;
+}
+
+div {
+    width: 300px;
+    margin: auto;
+    text-align: left;
+}
+
+hr {
+    width: 100px;
+    border: 10px solid green;
+    border-radius: 5px;
+}
+
+li{
+    padding-bottom:15px;
+}

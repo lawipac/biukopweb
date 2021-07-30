@@ -1,0 +1,22 @@
+p {
+    background-color:lightblue;
+    padding: 20px 5px;
+}
+
+h1 {
+    text-align: center;
+    text-decoration: overline;
+}
+
+div {
+    width: 300px;
+    margin: auto;
+    text-align: left;
+    background-color: yellow;
+}
+
+hr {
+    width: 100px;
+    border: 6px solid lightcoral;
+    border-radius: 5px;
+}

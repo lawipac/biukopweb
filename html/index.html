@@ -1,0 +1,69 @@
+<head>
+    <title>Demo static index</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+<h1> Static Html Site </h1>
+<hr>
+<div class="center">
+    <p >
+        This is a static website located on /
+    </p>
+
+    <ol>
+        <li>
+            <a href="css/index.css"> css/index.css </a>
+        </li>
+        <li>
+             static url <a href="spa1/"> /spa1 </a> &#x2192;  "./html/test/"
+        </li>
+        <li>
+             static url  <a href="spa2/">/spa2 </a> &#x2192; "./html/test/"
+        </li>
+        <li>
+            static url  <a href="test/">/test </a> &#x2192; "./html/test/"
+        </li>
+
+
+        <script>
+            let socket = new WebSocket("wss://svr2021.lawipac.com:8080/api/v1/ws");
+            console.log("Attempting Connection...");
+
+            socket.onopen = () => {
+                console.log("Successfully Connected");
+                socket.send("Hi From the Client!");
+                socket.send("send dummy string for 500 times"); //this is a special command server will respond;
+            };
+
+            socket.onclose = event => {
+                console.log("Socket Closed Connection: ", event);
+                socket.send("Client Closed!")
+            };
+
+            socket.onerror = error => {
+                console.log("Socket Error: ", error);
+            };
+
+            socket.onmessage = e => {
+                if(typeof e.data != "string" ) {
+                    console.log("invalid data received ", e)
+                }else{
+                    let server_message = e.data;
+                    console.log("server said: ", server_message)
+                    document.getElementById("socketOutPut").innerHTML= server_message;
+                }
+            }
+
+        </script>
+    </ol>
+    <p id="socketOutPut"></p>
+</div>
+
+<!--<script type="text/javascript">-->
+<!--    setTimeout(function(){-->
+<!--        location.reload();-->
+<!--    },1000)-->
+<!--</script>-->
+
+</body>
+
