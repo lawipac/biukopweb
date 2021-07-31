@@ -1,2 +1,15 @@
 runtime: go1.15
 env: flex
+resources:
+  cpu: 2
+  memory_gb: 1.4
+  disk_size_gb: 10
+network:
+  session_affinity: true
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 8
+  cool_down_period_sec: 180
+  cpu_utilization:
+    target_utilization: 0.5
+  target_concurrent_requests: 100
