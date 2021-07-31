@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/websocket"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
+	"time"
 )
 
 const apiV1WebSocket = apiV1Prefix + "ws"
@@ -39,20 +40,32 @@ func wsReader(conn *websocket.Conn) {
 			return
 		}
 
-		WsEchoIncomingMessage(conn, string(p), messageType)
-		//switch messageType {
-		//case websocket.TextMessage:
-		//	WsProcessingTxtMessage(conn, string(p))
-		//	break
-		//case websocket.BinaryMessage:
-		//	WsProcessingBinaryMessage(conn, p)
-		//	break
-		//case websocket.PingMessage:
-		//	break
-		//case websocket.PongMessage:
-		//	break
-		//}
+		switch messageType {
+		case websocket.TextMessage:
+			WsProcessingTxtMessage(conn, string(p))
+			break
+		case websocket.BinaryMessage:
+			WsProcessingBinaryMessage(conn, p)
+			break
+		case websocket.PingMessage:
+			break
+		case websocket.PongMessage:
+			break
+		}
 	}
+}
+
+func WsProcessingTxtMessage(conn *websocket.Conn, str string) {
+	if str == "send dummy string for 500 times" {
+		go wsDummySender(conn)
+	} else {
+		WsEchoIncomingMessage(conn, str, websocket.TextMessage)
+	}
+
+}
+
+func WsProcessingBinaryMessage(conn *websocket.Conn, data []byte) {
+	return
 }
 
 func WsEchoIncomingMessage(conn *websocket.Conn, msg string, messageType int) {
@@ -63,5 +76,24 @@ func WsEchoIncomingMessage(conn *websocket.Conn, msg string, messageType int) {
 	if err := conn.WriteMessage(messageType, []byte(msg)); err != nil {
 		log.Println(err)
 		return
+	}
+}
+
+func wsDummySender(conn *websocket.Conn) {
+	//write subsequent 5 copies, each after 1 second
+	log.Info("start sending server data to client ..")
+	p := "From server "
+	for i := 1; i < 500; i++ {
+		time.Sleep(1 * time.Second)
+		n := time.Now()
+		s := n.Format("2006-01-02 15:04:05")
+		p1 := p + s
+		//msg := fmt.Sprintf("copy %d, %s, %s", i, p, wsDummyString()) // 4M long string no issue
+		msg := fmt.Sprintf("copy %d, %s ", i, p1)
+		log.Info("dummy sender is working, ", msg)
+		if err := conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
+			log.Println("wsDummySender stopped on error: ", err)
+			return
+		}
 	}
 }

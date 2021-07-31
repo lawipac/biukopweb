@@ -20,5 +20,5 @@ func setupHTTPHandler() {
 
 	log.Printf("Server started at %s:%s\n", config.Host, config.Port)
 	log.Fatal(http.ListenAndServe(config.Host+":"+config.Port, nil))
-	// log.Fatal(http.ListenAndServeTLS(config.Host+":"+config.Port, config.TlsCert, config.TlsKey, nil))
+	//log.Fatal(http.ListenAndServeTLS(config.Host+":"+config.Port, config.TlsCert, config.TlsKey, nil))
 }

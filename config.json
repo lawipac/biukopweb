@@ -2,8 +2,8 @@
   "Host":"0.0.0.0",
   "Port":"8080",
   "DSN": "sp:sp@tcp(192.168.1.70:3306)/syd_credit?parseTime=true&loc=Australia%2FSydney&collation=utf8mb4_0900_ai_ci",
-  "TlsCert": "fullchain.pem",
-  "TlsKey": "privkey.pem",
+  "TlsCert": "cert/fullchain.pem",
+  "TlsKey": "cert/privkey.pem",
   "Debug": true,
   "Static": [
     {
