@@ -38,7 +38,7 @@ func setupRootFileServer() {
 	//root of doc
 	for idx, node := range config.Static {
 		log.Printf("setting up static %d with %+v\n", idx, node)
-		fs := http.FileServer(http.Dir(node.Dir))
+		fs := FileServerWith404(http.Dir(node.Dir), fileSystem404)
 		http.Handle(node.StaticUrl, http.StripPrefix(node.StripPrefix, fs))
 	}
 }
