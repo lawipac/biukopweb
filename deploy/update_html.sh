@@ -26,3 +26,5 @@ gcloud app instances scp --recurse "$HTML_WORKDIR"  $INSTANCE_ID:/home/sp/  --se
 # copy html
 echo "===execute remote sync======"
 gcloud app instances ssh $INSTANCE_ID --service=default --version=$LAST_VERSION_ID -- sudo bash $REMOTE_WORK/deploy/r_sync_html.sh
+echo "=== update complete this put the instance into debug mode == "
+gcloud app instances disable-debug
