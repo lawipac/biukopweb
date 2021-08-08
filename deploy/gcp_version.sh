@@ -31,7 +31,8 @@ del_old_instances(){
   done <<< "$VERSION_OUTPUT"
 
   #cannot do this within while, as the user input will by bypassed by <<<
-  for version in  ${dropList[@]} ; do 
-    gcloud app versions delete --service=default $version ;
+  for version in  ${dropList[@]} ; do
+    echo "gcloud app versions delete --quiet --service=default $version ";
+    gcloud app versions delete --quiet --service=default $version ;
   done
 }
