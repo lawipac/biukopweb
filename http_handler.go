@@ -84,6 +84,9 @@ func FileServerWith404(root http.FileSystem, handler404 FSHandler404) http.Handl
 
 func fileSystem404(w http.ResponseWriter, r *http.Request) (doDefaultFileServe bool) {
 	//if not found redirect to /
-	r.URL.Path = "/404.html"
-	return true
+	// r.URL.Path = "/404.html" //not working as some directorys may not be feasible.
+	// return true
+
+	http.Redirect(w, r, "/404.html", http.StatusSeeOther)
+	return false
 }
