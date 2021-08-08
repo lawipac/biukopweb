@@ -1,7 +1,7 @@
 runtime: go1.15
 env: flex
 resources:
-  cpu: 2
+  cpu: 1
   memory_gb: 1.4
   disk_size_gb: 10
 network:

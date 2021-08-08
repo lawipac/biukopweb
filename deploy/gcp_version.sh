@@ -17,39 +17,21 @@ get_instance_id() {
 }
 
 del_old_instances(){
-  get_instance_id
-  echo "RUNNING VERSION: " $LAST_VERSION_ID
+  VERSION_OUTPUT=$(gcloud app versions list)
+  # VERSION_OUTPUT=$` cat /home/sp/go/src/goweb/deploy/sample-version-list.txt`
+  echo "$VERSION_OUTPUT"
+  dropList=()
 
-  GCP_VERSIONS=(` gcloud app versions list | awk -F' ' '{print $2}' `)
-  LENGTH=${#GCP_VERSIONS[@]}
-  for i in $(seq 1 1 $(expr $LENGTH - 1) )
-  do
-    if [ "${GCP_VERSIONS[$i]}" != "$LAST_VERSION_ID" ] ; then
-      echo "delete old version ${GCP_VERSIONS[$i]} "
-      del_instance_by_version ${GCP_VERSIONS[$i]}
-    else
-      echo "KEEP RUNNING VERSION ${GCP_VERSIONS[$i]}"
+  while IFS= read -r line; do
+    status=(` echo $line | awk -F' ' '{print $5}' `)
+    version=(` echo $line | awk -F' ' '{print $2}' `)
+    if [ "$status" == "STOPPED" ] ; then
+       dropList+=("$version")
     fi
+  done <<< "$VERSION_OUTPUT"
+
+  #cannot do this within while, as the user input will by bypassed by <<<
+  for version in  ${dropList[@]} ; do 
+    gcloud app versions delete --service=default $version ;
   done
 }
-
-del_instance_by_version() {
-  versionId=$1
-  if [ "$versionId" == "" ]; then
-    return
-  fi
-  gcloud app versions delete --service=default $versionId ;
-
-#  while true; do
-#      read -p "Do you wish to delete version $versionId ?" yn
-#      case $yn in
-#          [Yy]* )
-#            echo gcloud app instances delete $INSTANCE_ID --service=default --version=$versionId ;
-#            break;;
-#          [Nn]* ) exit;;
-#          * ) echo "Please answer yes or no.";;
-#      esac
-#  done
-
-}
-
