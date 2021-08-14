@@ -7,7 +7,7 @@
   "Debug": true,
   "Static": [
     {
-      "Dir": "/mnt/hgfs/workspace/2021-07-31-BiukopWeb",
+      "Dir": "./html/",
       "StaticUrl": "/",
       "StripPrefix" : "/"
     },

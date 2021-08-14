@@ -7,9 +7,13 @@ echo "create /tmp/goweb"
 mkdir -p /tmp/goweb
 echo "prepare golang project"
 rsync  -a  $PROJ_DIR /tmp/goweb/
-rm -rf /tmp/goweb/html/*
+cp -f $PROJ_DIR/deploy/config_production.json /tmp/goweb/config.json
+rm -rf /tmp/goweb/html/css
+rm -rf /tmp/goweb/html/test
+rm -rf /tmp/goweb/html/*.html
 echo "sync Web html"
 rsync -a /mnt/hgfs/workspace/2021-07-31-BiukopWeb/ /tmp/goweb/html/
+
 
 cd /tmp/goweb
 gcloud app deploy
