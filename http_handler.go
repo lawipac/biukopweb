@@ -14,6 +14,7 @@ var httpEntryMap = map[string]httpEntry{
 	apiV1Prefix:    apiV1Main,
 	apiV1WebSocket: apiV1WebSocketHandler,
 	videoPrefix:    videoMain,
+	formPrefix:     formMain,
 }
 
 func setupHTTPHandler() {
