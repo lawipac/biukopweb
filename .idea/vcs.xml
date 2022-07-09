@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/biukopweb-html" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deploy/biukopweb-html" vcs="Git" />
   </component>
 </project>
