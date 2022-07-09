@@ -40,5 +40,8 @@ func setupRootFileServer() {
 		log.Printf("setting up static %d with %+v\n", idx, node)
 		fs := FileServerWith404(http.Dir(node.Dir), fileSystem404)
 		http.Handle(node.StaticUrl, http.StripPrefix(node.StripPrefix, fs))
+		if node.Sync != "" {
+			// go pullStaticHtml(node.Dir, node.Sync, config.RSyncKey)
+		}
 	}
 }

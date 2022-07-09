@@ -5,11 +5,13 @@
   "TlsCert": "cert/fullchain.pem",
   "TlsKey": "cert/privkey.pem",
   "Debug": true,
+  "RSyncKey": "cert/rsync.key",
   "Static": [
     {
       "Dir": "./html/",
       "StaticUrl": "/",
-      "StripPrefix" : "/"
+      "StripPrefix" : "/",
+      "Sync": "a@c5015.biukop.com.au:/home/a/public_html/"
     },
     {
       "Dir": "./html/test/",

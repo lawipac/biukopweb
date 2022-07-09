@@ -24,7 +24,18 @@ func formMain(w http.ResponseWriter, r *http.Request) {
 func (m *formInput) contactUs() {
 	ret := map[string]interface{}{}
 	ret["success"] = true
-	m.r.ParseForm()
+	//	e := m.r.ParseForm()
+	e := m.r.ParseMultipartForm(32 * 1024 * 1024)
+	if e != nil {
+		return
+	}
+
+	for key, values := range m.r.Form { // range over map
+		for _, value := range values { // range over []string
+			fmt.Println(key, value)
+		}
+	}
+
 	name := m.r.FormValue("name")
 	email := m.r.FormValue("email")
 	message := m.r.FormValue("message")
@@ -65,12 +76,12 @@ func sendContactUs(name string, email string, userInput string) {
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
 
-	raw := `Subject: {name} Contact form on Biukop Web 
+	raw := `Subject: {name} [ Contact form on Biukop Web ] 
 Content-Type: text/plain; charset="UTF-8"
 
     Dear Manager,
 
-    We receive a a form submission from biukop.com.au 
+    We received a a form submission from biukop.com.au 
     name  : {name}    
     email : {email}
     message:

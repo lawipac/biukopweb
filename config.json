@@ -5,11 +5,13 @@
   "TlsCert": "cert/fullchain.pem",
   "TlsKey": "cert/privkey.pem",
   "Debug": true,
+  "RSyncKey": "cert/rsync.key",
   "Static": [
     {
-      "Dir": "/mnt/hgfs/workspace/2021-07-31-BiukopWeb",
+      "Dir": "./deploy/biukopweb-html/",
       "StaticUrl": "/",
-      "StripPrefix" : "/"
+      "StripPrefix" : "/",
+      "Sync": "a@c5015.biukop.com.au:/home/a/public_html/"
     },
     {
       "Dir": "./html/test/",

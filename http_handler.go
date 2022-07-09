@@ -61,21 +61,29 @@ func FileServerWith404(root http.FileSystem, handler404 FSHandler404) http.Handl
 
 		// attempt to open the file via the http.FileSystem
 		f, err := root.Open(upath)
+
 		if err != nil {
 			if os.IsNotExist(err) {
-				// call handler
-				if handler404 != nil {
-					doDefault := handler404(w, r)
-					if !doDefault {
-						return
-					}
+				if handledBy404Handler(handler404, w, r) {
+					return
 				}
 			}
 		}
 
-		// close if successfully opened
-		if err == nil {
-			f.Close()
+		// if successfully opened, check if it's dir
+		defer func(f http.File) {
+			err := f.Close()
+			if err != nil {
+				return //cannot close this file
+			}
+		}(f)
+
+		//see if it's directory
+		info, e := f.Stat()
+		if e != nil || info.IsDir() {
+			if handledBy404Handler(handler404, w, r) {
+				return
+			}
 		}
 
 		// default serve
@@ -89,5 +97,16 @@ func fileSystem404(w http.ResponseWriter, r *http.Request) (doDefaultFileServe b
 	// return true
 
 	http.Redirect(w, r, "/404.html", http.StatusSeeOther)
+	return false
+}
+
+//check if h is null, if not call this as handler.
+func handledBy404Handler(h FSHandler404, w http.ResponseWriter, r *http.Request) bool {
+	if h != nil {
+		doDefault := h(w, r)
+		if !doDefault {
+			return true
+		}
+	}
 	return false
 }

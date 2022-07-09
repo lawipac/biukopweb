@@ -12,6 +12,7 @@ const videoPrefix = "/v/"
 
 type vimeoPlayer struct {
 	VideoId string
+	Token   string
 
 	playsinline int
 	autoplay    int
@@ -230,9 +231,24 @@ func videoVimeo(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, output)
 }
 
+/**
+  http://v.io/v/1234567/token  where token might be optional
+*/
 func getVimeoParams(r *http.Request) (ret vimeoPlayer) {
 	prefix := videoPrefix + "v/"
-	ret.VideoId = r.URL.Path[len(prefix):]
+	var IdAndToken = strings.Split(r.URL.Path[len(prefix):], "/")
+
+	if len(IdAndToken) == 1 {
+		ret.VideoId = IdAndToken[0]
+		ret.Token = ""
+	} else if len(IdAndToken) == 2 {
+		ret.VideoId = IdAndToken[0]
+		ret.Token = IdAndToken[1]
+	} else { // a default video will be given
+		ret.VideoId = "719542916"
+		ret.Token = ""
+	}
+
 	if strings.ToLower(r.Host) == ("v.io") {
 		ret.Title = "您有一条视频消息"
 		ret.ContentDescription = "私密视频"
@@ -258,7 +274,7 @@ func getVimeoParams(r *http.Request) (ret vimeoPlayer) {
 
 func (m *vimeoPlayer) getUrl() (ret string) {
 	ret = fmt.Sprintf(
-		"https://player.vimeo.com/video/%s?playsinline=%d&autoplay=%d&autopause=%d&loop=%d&background=%d&muted=%d",
-		m.VideoId, m.playsinline, m.autoplay, m.autopause, m.loop, m.background, m.muted)
+		"https://player.vimeo.com/video/%s?h=%s&playsinline=%d&autoplay=%d&autopause=%d&loop=%d&background=%d&muted=%d",
+		m.VideoId, m.Token, m.playsinline, m.autoplay, m.autopause, m.loop, m.background, m.muted)
 	return
 }
