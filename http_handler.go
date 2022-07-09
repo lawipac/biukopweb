@@ -80,12 +80,24 @@ func FileServerWith404(root http.FileSystem, handler404 FSHandler404) http.Handl
 
 		//see if it's directory
 		info, e := f.Stat()
-		if e != nil || info.IsDir() {
+		if e != nil {
 			if handledBy404Handler(handler404, w, r) {
 				return
 			}
 		}
 
+		if info.IsDir() {
+			//do we have index.html?
+			f, err := root.Open(upath + "/index.html")
+			if err != nil {
+				//no we don't
+				if handledBy404Handler(handler404, w, r) {
+					return
+				}
+			} else {
+				f.Close()
+			}
+		}
 		// default serve
 		fs.ServeHTTP(w, r)
 	})
